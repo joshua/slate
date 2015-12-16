@@ -55,6 +55,10 @@ static NSDictionary *jswwJsMethods;
   return self;
 }
 
+- (uint32_t)id {
+    return [AccessibilityWrapper getWindowId:[aw window]];
+}
+
 - (NSString *)title {
   return [aw getTitle];
 }
@@ -164,6 +168,7 @@ static NSDictionary *jswwJsMethods;
 + (void)setJsMethods {
   if (jswwJsMethods == nil) {
     jswwJsMethods = @{
+      NSStringFromSelector(@selector(id)): @"id",
       NSStringFromSelector(@selector(title)): @"title",
       NSStringFromSelector(@selector(topLeft)): @"topLeft",
       NSStringFromSelector(@selector(tl)): @"tl",

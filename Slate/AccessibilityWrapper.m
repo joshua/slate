@@ -25,6 +25,8 @@
 static AXUIElementRef systemWideElement = NULL;
 static NSDictionary *unselectableApps = nil;
 
+extern AXError _AXUIElementGetWindow(AXUIElementRef, CGWindowID* out);
+
 // private Apple API; via:
 // https://github.com/sdegutis/hydra/blob/fb4ef150f827a5a78fa0b9ba7f75ac4e43d54860/Hydra/API/application.m#L154-L170
 typedef int CGSConnectionID;
@@ -274,6 +276,15 @@ bool CGSEventIsAppUnresponsive(CGSConnectionID cid, const ProcessSerialNumber *p
   }
   if (_title != NULL) CFRelease(_title);
   return @"";
+}
+
++ (uint32_t)getWindowId:(AXUIElementRef)window {
+    CGWindowID _windowId;
+    if (_AXUIElementGetWindow(window, &_windowId) == kAXErrorSuccess) {
+        SlateLogger(@" got window id: %i", _windowId);
+        return _windowId;
+    }
+    return -1;
 }
 
 + (BOOL)isWindowMinimizedOrHidden:(AXUIElementRef)window inApp:(AXUIElementRef)app {
